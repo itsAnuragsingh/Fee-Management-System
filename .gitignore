@@ -1,0 +1,29 @@
+# ===== Root (optional) =====
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# ===== Backend =====
+backend/node_modules/
+backend/.env
+backend/package-lock.json
+backend/yarn.lock
+backend/npm-debug.log*
+backend/dist/
+backend/logs/
+backend/*.log
+
+# ===== Frontend (Vite + React) =====
+frontend/node_modules/
+frontend/.env
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/npm-debug.log*
+frontend/dist/
+
+# ===== Editor & System =====
+.vscode/
+.idea/
+*.swp
+*.swo
