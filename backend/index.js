@@ -2,6 +2,8 @@ import express from 'express'
 import {config} from 'dotenv'
 import { dbConnect } from './lib/db.js';
 import authRoutes from './routes/auth.route.js'
+import studentRoutes from './routes/student.route.js'
+import paymentsRoutes from './routes/payment.route.js'
 import cookieParser from 'cookie-parser';
 config()
 dbConnect()
@@ -11,6 +13,8 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/auth', authRoutes)
+app.use('/api/students',studentRoutes )
+app.use('/api/payments', paymentsRoutes)
 app.get("/api/health", (req, res)=>{
     res.send("All good !")
 })
