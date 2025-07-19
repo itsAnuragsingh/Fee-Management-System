@@ -28,9 +28,12 @@ export async function register(req, res) {
     await student.save();
     const token = generateToken(student._id);
 
-    res.cookie("token", token, {
-      tpOnly: true,
+      res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite:'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/'
     });
     const studentData = {
       _id: student._id,
@@ -63,8 +66,11 @@ export async function login(req, res) {
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
     const token = generateToken(student._id);
     res.cookie("token", token, {
-      tpOnly: true,
+      httpOnly: true,
+      secure: true,
+      sameSite:'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/'
     });
     const studentData = {
       _id: student._id,
