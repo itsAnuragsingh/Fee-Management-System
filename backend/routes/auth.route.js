@@ -8,5 +8,5 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout)
 router.get('/me', authMiddleware, getCurrentStudent)
-router.patch('/update-profile', authMiddleware, updateProfile);
+router.put('/update-profile', authMiddleware, updateProfile);
 export default router
