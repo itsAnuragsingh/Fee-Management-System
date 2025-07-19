@@ -26,9 +26,13 @@ function App() {
       if (response.ok) {
         const user = await response.json()
         setCurrentUser(user)
+      }else {
+       
+        setCurrentUser(null)
       }
     } catch (error) {
       console.error("Auth check failed:", error)
+      setCurrentUser(null)
     } finally {
       setLoading(false)
     }
@@ -38,13 +42,22 @@ function App() {
   }
   const handleLogOut = async () =>{
     try {
-      await fetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
+      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       })
+      
+  
       setCurrentUser(null)
+      
+
+      window.location.href = '/login'
+      
     } catch (error) {
       console.error("Logout failed:", error)
+      
+      setCurrentUser(null)
+      window.location.href = '/login'
     }
   }
    if (loading) {
