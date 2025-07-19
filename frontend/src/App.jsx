@@ -10,6 +10,7 @@ import NavBar from './components/NavBar'
 import ProfilePage from './pages/ProfilePage'
 import PaymentPage from './pages/PaymentPage'
 import LoadingSpinner from './components/LoadingSpinner'
+import { authenticatedFetch, removeAuthToken } from './utils/auth'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
@@ -24,19 +25,19 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/me", {
-        credentials: "include",
-      })
+      const response = await authenticatedFetch("https://fee-management-system-52mr.onrender.com/api/auth/me")
       if (response.ok) {
         const user = await response.json()
         setCurrentUser(user)
       }else {
-       
         setCurrentUser(null)
+        // Clear any stored tokens if auth check fails
+        removeAuthToken()
       }
     } catch (error) {
       console.error("Auth check failed:", error)
       setCurrentUser(null)
+      removeAuthToken()
     } finally {
       setLoading(false)
     }
@@ -49,12 +50,12 @@ function App() {
     setIsLoggingOut(true)
     
     try {
-      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
+      const response = await authenticatedFetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
         method: "POST",
-        credentials: "include",
       })
 
       setCurrentUser(null)
+      removeAuthToken()
 
       setTimeout(() => {
         setIsLoggingOut(false)
@@ -64,6 +65,7 @@ function App() {
       console.error("Logout failed:", error)
 
       setCurrentUser(null)
+      removeAuthToken()
       setTimeout(() => {
         setIsLoggingOut(false)
       }, 100)

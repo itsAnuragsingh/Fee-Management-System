@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { CreditCard, ArrowLeft, CheckCircle, Lock, Calendar, UserIcon } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import LoadingSpinner from "../components/LoadingSpinner"
+import { authenticatedFetch } from "../utils/auth"
+
 
 export default function PaymentPage({ user, onSuccess }) {
   const navigate = useNavigate()
@@ -52,12 +54,8 @@ export default function PaymentPage({ user, onSuccess }) {
     setError("")
     setStep(2)
     try {
-      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/payments/process", {
+      const response = await authenticatedFetch("https://fee-management-system-52mr.onrender.com/api/payments/process", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify({
           amount: paymentData.amount,
           cardholderName: paymentData.cardholderName,

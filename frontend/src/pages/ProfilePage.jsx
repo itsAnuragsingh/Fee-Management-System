@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { User, CreditCard, Edit, Save, X, CheckCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import LoadingSpinner from "../components/LoadingSpinner"
+import { authenticatedFetch } from "../utils/auth"
 
 export default function ProfilePage({ user, onUpdate }) {
   const navigate = useNavigate()
@@ -41,12 +42,8 @@ export default function ProfilePage({ user, onUpdate }) {
     setLoading(true)
     setMessage("")
     try {
-      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/update-profile", {
+      const response = await authenticatedFetch("https://fee-management-system-52mr.onrender.com/api/auth/update-profile", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
         body: JSON.stringify(formData),
       })
       const data = await response.json()

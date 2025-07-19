@@ -13,10 +13,11 @@ function setCookieToken(res, token) {
   
   res.cookie("token", token, {
     httpOnly: true,
-    secure: isProduction, 
-    sameSite: isProduction ? 'none' : 'lax', 
+    secure: true, // Always use secure in production
+    sameSite: 'none', // Required for cross-origin cookies
     maxAge: 7 * 24 * 60 * 60 * 1000, 
-    path: '/'
+    path: '/',
+    domain: isProduction ? '.onrender.com' : undefined // Set domain for production
   });
 }
 
@@ -87,6 +88,7 @@ export async function login(req, res) {
     res.status(200).json({
       message: "Login successful",
       user: studentData,
+      token: token // Include token in response as backup
     });
   } catch (error) {
     console.log("Registration error:", error);
@@ -99,9 +101,10 @@ export function logout(req, res){
     
     res.clearCookie('token', {
         httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? 'none' : 'lax',
-        path: '/'
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        domain: isProduction ? '.onrender.com' : undefined
     });
     res.json({message: "Logout Successful"})
 }

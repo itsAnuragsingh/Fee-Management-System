@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { setAuthToken } from '../utils/auth';
 const LoginPage = ({onLogin}) => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true)
@@ -44,6 +45,10 @@ const LoginPage = ({onLogin}) => {
       })
       const data = await response.json()
       if(response.ok){
+        // Store token if provided in response
+        if (data.token) {
+          setAuthToken(data.token)
+        }
         onLogin(data.user)
         navigate("/")
       }else {

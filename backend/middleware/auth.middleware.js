@@ -15,6 +15,10 @@ export async function authMiddleware(req,res,next){
             if (authHeader && authHeader.startsWith('Bearer ')) {
                 token = authHeader.substring(7); 
                 console.log("Token found in Authorization header");
+            } else if (authHeader && !authHeader.startsWith('Bearer ')) {
+                // Handle case where Bearer prefix might be missing
+                token = authHeader;
+                console.log("Token found in Authorization header (no Bearer prefix)");
             }
         }
 
