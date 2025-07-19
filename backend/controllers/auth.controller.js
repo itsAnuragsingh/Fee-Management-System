@@ -8,6 +8,18 @@ function generateToken(studentId) {
   });
 }
 
+function setCookieToken(res, token) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: isProduction, 
+    sameSite: isProduction ? 'none' : 'lax', 
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
+    path: '/'
+  });
+}
+
 export async function register(req, res) {
   try {
     const { name, email, password, course, semester, year, phone } = req.body;
@@ -28,13 +40,7 @@ export async function register(req, res) {
     await student.save();
     const token = generateToken(student._id);
 
-      res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite:'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/'
-    });
+     setCookieToken(res, token);
     const studentData = {
       _id: student._id,
       name: student.name,
@@ -65,13 +71,7 @@ export async function login(req, res) {
     const isMatch = await bcrypt.compare(password, student.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
     const token = generateToken(student._id);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite:'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/'
-    });
+    setCookieToken(res, token);
     const studentData = {
       _id: student._id,
       name: student.name,
@@ -84,7 +84,7 @@ export async function login(req, res) {
       year: student.year,
     };
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Login successful",
       user: studentData,
     });
@@ -95,10 +95,12 @@ export async function login(req, res) {
 }
 
 export function logout(req, res){
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     res.clearCookie('token', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         path: '/'
     });
     res.json({message: "Logout Successful"})

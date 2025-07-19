@@ -3,17 +3,25 @@ import jwt from 'jsonwebtoken'
 
 export async function authMiddleware(req,res,next){
     try {
-
-        let token = req.cookies?.token;
+        let token = null;
+        
+        if (req.cookies && req.cookies.token) {
+            token = req.cookies.token;
+            console.log("Token found in cookies");
+        }
+       
         if (!token) {
-            const authHeader = req.header('Authorization');
+            const authHeader = req.headers.authorization || req.headers.Authorization;
             if (authHeader && authHeader.startsWith('Bearer ')) {
                 token = authHeader.substring(7); 
+                console.log("Token found in Authorization header");
             }
         }
 
         if (!token) {
             console.log("No token found in cookies or Authorization header");
+            console.log("Available cookies:", req.cookies);
+            console.log("Authorization header:", req.headers.authorization);
             return res.status(401).json({ error: "No token provided" });
         }
         
@@ -22,7 +30,6 @@ export async function authMiddleware(req,res,next){
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         console.log("Token decoded:", decoded);
         
-        // Find student
         const student = await Student.findById(decoded.id);
         if (!student) {
             console.log("Student not found for id:", decoded.id);
