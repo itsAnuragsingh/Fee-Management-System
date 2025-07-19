@@ -13,7 +13,12 @@ const app = express();
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-  origin:'https://edupay-fee.vercel.app/',
+  origin: [
+    'https://edupay-fee.vercel.app',
+    'https://edupay-fee.vercel.app/',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
   credentials: true
 }));
 app.use(express.urlencoded({ extended: true }))
@@ -26,5 +31,5 @@ app.get("/api/health", (req, res)=>{
 })
 
 app.listen(PORT, ()=>{
-    console.log(`Server is running on port http://loalhost:3000`)
+    console.log(`Server is running on port http://localhost:3000`)
 })
