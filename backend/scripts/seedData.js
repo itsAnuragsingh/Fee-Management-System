@@ -7,16 +7,7 @@ import Student from '../model/student.model.js';
 
 // Sample students data
 const studentsData = [
-  {
-    name: 'Anurag Singh',
-    email: 'anurag@example.com',
-    password: 'password123',
-    phone: '8579125698',
-    course: 'Computer Science',
-    semester: 7,
-    year: 2022,
-    feesPaid: false
-  },
+ 
   {
     name: 'Priya Verma',
     email: 'priya@example.com',

@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 import NavBar from './components/NavBar'
 import ProfilePage from './pages/ProfilePage'
+import PaymentPage from './pages/PaymentPage'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
@@ -68,6 +69,18 @@ function App() {
           </ProtectedRoute>
         }
         />
+         <Route
+          path="/payment"
+          element={
+            <ProtectedRoute user={currentUser}>
+              <PaymentPage user={currentUser} onSuccess={checkAuthStatus} />
+            </ProtectedRoute>
+          }
+        />
+        
+
+        
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </div>
   )
