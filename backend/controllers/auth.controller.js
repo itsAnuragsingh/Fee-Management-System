@@ -95,7 +95,12 @@ export async function login(req, res) {
 }
 
 export function logout(req, res){
-    res.clearCookie('token')
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/'
+    });
     res.json({message: "Logout Successful"})
 }
 

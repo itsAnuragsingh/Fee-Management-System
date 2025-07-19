@@ -14,9 +14,13 @@ import LoadingSpinner from './components/LoadingSpinner'
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
    useEffect(() => {
-    checkAuthStatus()
-  }, [])
+    
+    if (!isLoggingOut) {
+      checkAuthStatus()
+    }
+  }, [isLoggingOut])
 
   const checkAuthStatus = async () => {
     try {
@@ -39,28 +43,33 @@ function App() {
   }
   const handleLogin = (user)=>{
     setCurrentUser(user)
+    setIsLoggingOut(false)
   }
-  const handleLogOut = async () =>{
+   const handleLogOut = async () => {
+    setIsLoggingOut(true)
+    
     try {
       const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       })
-      
-  
-      setCurrentUser(null)
-      
 
-      window.location.href = '/login'
+      setCurrentUser(null)
+
+      setTimeout(() => {
+        setIsLoggingOut(false)
+      }, 100)
       
     } catch (error) {
       console.error("Logout failed:", error)
-      
+
       setCurrentUser(null)
-      window.location.href = '/login'
+      setTimeout(() => {
+        setIsLoggingOut(false)
+      }, 100)
     }
   }
-   if (loading) {
+   if (loading && !isLoggingOut) {
     return (
       <div className="min-h-screen gradient-bg flex items-center justify-center">
         <LoadingSpinner />
@@ -70,37 +79,40 @@ function App() {
   return (
     <div className='min-h-screen'>
       <Routes>
-        <Route path='/' element={currentUser ? <Navigate to="/dashboard" replace/>:<LandingPage />}/>
-        <Route path='/login' element={currentUser ? <Navigate to="/dashboard" replace/>:<LoginPage onLogin={handleLogin} />}/>
-        <Route
-        path='/dashboard'
-        element={
-          <ProtectedRoute user={currentUser}>
-            <NavBar user={currentUser} onLogout={handleLogOut}/>
-            <Dashboard />
-          </ProtectedRoute>
-        }
+        <Route 
+          path='/' 
+          element={currentUser && !isLoggingOut ? <Navigate to="/dashboard" replace/> : <LandingPage />}
+        />
+        <Route 
+          path='/login' 
+          element={currentUser && !isLoggingOut ? <Navigate to="/dashboard" replace/> : <LoginPage onLogin={handleLogin} />}
         />
         <Route
-        path='/profile'
-        element={
-          <ProtectedRoute user={currentUser}>
-           <NavBar user={currentUser} onLogout={handleLogOut}/>
-            <ProfilePage user={currentUser} onUpdate={checkAuthStatus}/>
-          </ProtectedRoute>
-        }
+          path='/dashboard'
+          element={
+            <ProtectedRoute user={currentUser} isLoggingOut={isLoggingOut}>
+              <NavBar user={currentUser} onLogout={handleLogOut}/>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute user={currentUser} isLoggingOut={isLoggingOut}>
+             <NavBar user={currentUser} onLogout={handleLogOut}/>
+              <ProfilePage user={currentUser} onUpdate={checkAuthStatus}/>
+            </ProtectedRoute>
+          }
         />
          <Route
           path="/payment"
           element={
-            <ProtectedRoute user={currentUser}>
+            <ProtectedRoute user={currentUser} isLoggingOut={isLoggingOut}>
               <PaymentPage user={currentUser} onSuccess={checkAuthStatus} />
             </ProtectedRoute>
           }
         />
-        
-
-        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
