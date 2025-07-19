@@ -11,7 +11,7 @@ const Dashboard = () => {
     }, [])
     const fetchStudents = async () => {
         try {
-            const response = await fetch("http://localhost:3000/api/students", {
+            const response = await fetch("https://fee-management-system-52mr.onrender.com/api/students", {
                 credentials: "include"
             })
             const data = await response.json()

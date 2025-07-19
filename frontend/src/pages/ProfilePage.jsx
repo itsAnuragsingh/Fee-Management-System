@@ -41,7 +41,7 @@ export default function ProfilePage({ user, onUpdate }) {
     setLoading(true)
     setMessage("")
     try {
-      const response = await fetch("http://localhost:3000/api/auth/update-profile", {
+      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/update-profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

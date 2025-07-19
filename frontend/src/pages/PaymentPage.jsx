@@ -52,7 +52,7 @@ export default function PaymentPage({ user, onSuccess }) {
     setError("")
     setStep(2)
     try {
-      const response = await fetch("http://localhost:3000/api/payments/process", {
+      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/payments/process", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

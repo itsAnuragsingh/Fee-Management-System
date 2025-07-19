@@ -32,7 +32,7 @@ const LoginPage = ({onLogin}) => {
     setLoading(true)
     setError("")
     try {
-      const endpoint = isLogin ? "http://localhost:3000/api/auth/login":"http://localhost:3000/api/auth/register"
+      const endpoint = isLogin ? "https://fee-management-system-52mr.onrender.com/api/auth/login":"https://fee-management-system-52mr.onrender.com/api/auth/register"
 
       const response = await fetch(endpoint,{
         method:"POST",

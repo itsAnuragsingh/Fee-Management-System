@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import NavBar from './components/NavBar'
 import ProfilePage from './pages/ProfilePage'
 import PaymentPage from './pages/PaymentPage'
+import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
@@ -19,7 +20,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/me", {
+      const response = await fetch("https://fee-management-system-52mr.onrender.com/api/auth/me", {
         credentials: "include",
       })
       if (response.ok) {
@@ -37,7 +38,7 @@ function App() {
   }
   const handleLogOut = async () =>{
     try {
-      await fetch("http://localhost:3000/api/auth/logout", {
+      await fetch("https://fee-management-system-52mr.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       })
@@ -45,6 +46,13 @@ function App() {
     } catch (error) {
       console.error("Logout failed:", error)
     }
+  }
+   if (loading) {
+    return (
+      <div className="min-h-screen gradient-bg flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
   }
   return (
     <div className='min-h-screen'>
